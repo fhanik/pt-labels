@@ -1,5 +1,6 @@
 require 'pivotal-tracker'
 
+
 class Client
 
   attr_accessor :project,:key,:total,:tag
@@ -43,8 +44,13 @@ class Client
   def total
     unless @total
       xml = PivotalTracker::Client.connection["/projects/#{project}/stories?limit=1"].get
-      node = XML::Parser.string(xml).parse.root
-      @total = node.attributes['total'].to_i
+      puts "xml: #{xml}" 
+      xml_doc  = Nokogiri::XML(xml)
+      #node = Nokogiri::XML::Parser.string(xml).parse.root
+      node = xml_doc.root
+      tt = node.attributes['total'].to_s
+      puts "total: #{tt}"
+      @total = tt.to_i
     end
     @total
   end
